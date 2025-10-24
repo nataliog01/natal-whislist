@@ -16,7 +16,10 @@ form.addEventListener('submit', (e) => {
 
     wishlist.appendChild(li);
 
+    form.reset();
+
 });
+
 
 // ❄️ Animação de neve
 function createSnowflake() {
@@ -41,3 +44,6 @@ function createSnowflake() {
 
 // Criar flocos a intervalos regulares
 setInterval(createSnowflake, 200);
+
+//Função para guardar wishlist
+
