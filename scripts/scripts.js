@@ -24,13 +24,12 @@ function createWishlistItemElement(item) {
         ? `<strong>${item.name}</strong> - <a href="${item.link}" target="_blank">Ver produto</a>`
         : `<strong>${item.name}</strong>`;
 
-    // (Opcional) botão para remover
     const deleteBtn = document.createElement('button');
     deleteBtn.textContent = '✖';
     deleteBtn.style.border = 'none';
     deleteBtn.style.background = 'transparent';
     deleteBtn.style.cursor = 'pointer';
-    deleteBtn.style.fontSize = '1rem';
+    deleteBtn.style.marginLeft = '8px';
 
     deleteBtn.addEventListener('click', () => {
         removeItem(item.id);
@@ -42,9 +41,9 @@ function createWishlistItemElement(item) {
     return li;
 }
 
-// Renderiza todos os itens na UL
+// Desenha a wishlist toda no <ul>
 function renderWishlist() {
-    wishlist.innerHTML = ''; // limpa a lista
+    wishlist.innerHTML = '';
 
     const items = getSavedWishlist();
     items.forEach(item => {
@@ -55,8 +54,8 @@ function renderWishlist() {
 
 // Remove um item pelo id
 function removeItem(id) {
-    const items = getSavedWishlist().filter(item => item.id !== id);
-    saveWishlist(items);
+    const updated = getSavedWishlist().filter(item => item.id !== id);
+    saveWishlist(updated);
     renderWishlist();
 }
 
@@ -75,7 +74,7 @@ form.addEventListener('submit', (e) => {
     const items = getSavedWishlist();
 
     const newItem = {
-        id: Date.now(), // id simples
+        id: Date.now(),
         name,
         link
     };
@@ -84,12 +83,11 @@ form.addEventListener('submit', (e) => {
     saveWishlist(items);
     renderWishlist();
 
-    // limpar campos
     nameInput.value = '';
     linkInput.value = '';
 });
 
-// Carrega a wishlist ao abrir a página
+// Carrega a wishlist quando a página abre
 document.addEventListener('DOMContentLoaded', renderWishlist);
 
 
@@ -108,12 +106,13 @@ function createSnowflake() {
     const size = Math.random() * 1.2 + 0.5;
     snowflake.style.fontSize = size + 'rem';
 
-    // duração da queda
-    const duration = Math.random() * 5 + 5; // entre 5 e 10s
+    // duração da queda (entre 5 e 10 segundos)
+    const duration = Math.random() * 5 + 5;
     snowflake.style.animationDuration = duration + 's';
 
     snowContainer.appendChild(snowflake);
 
+    // remover depois da animação
     setTimeout(() => {
         snowflake.remove();
     }, duration * 1000);
