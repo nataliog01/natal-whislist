@@ -1,49 +1,123 @@
+// ==== WISHLIST ==== //
 const form = document.getElementById('wishlist-form');
 const wishlist = document.getElementById('wishlist');
 
+const STORAGE_KEY = 'wishlist-natal-goncalo';
+
+// Lê a wishlist guardada no localStorage
+function getSavedWishlist() {
+    const data = localStorage.getItem(STORAGE_KEY);
+    return data ? JSON.parse(data) : [];
+}
+
+// Guarda a wishlist no localStorage
+function saveWishlist(items) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+}
+
+// Cria um <li> para um item
+function createWishlistItemElement(item) {
+    const li = document.createElement('li');
+
+    const textPart = document.createElement('span');
+    textPart.innerHTML = item.link
+        ? `<strong>${item.name}</strong> - <a href="${item.link}" target="_blank">Ver produto</a>`
+        : `<strong>${item.name}</strong>`;
+
+    // (Opcional) botão para remover
+    const deleteBtn = document.createElement('button');
+    deleteBtn.textContent = '✖';
+    deleteBtn.style.border = 'none';
+    deleteBtn.style.background = 'transparent';
+    deleteBtn.style.cursor = 'pointer';
+    deleteBtn.style.fontSize = '1rem';
+
+    deleteBtn.addEventListener('click', () => {
+        removeItem(item.id);
+    });
+
+    li.appendChild(textPart);
+    li.appendChild(deleteBtn);
+
+    return li;
+}
+
+// Renderiza todos os itens na UL
+function renderWishlist() {
+    wishlist.innerHTML = ''; // limpa a lista
+
+    const items = getSavedWishlist();
+    items.forEach(item => {
+        const li = createWishlistItemElement(item);
+        wishlist.appendChild(li);
+    });
+}
+
+// Remove um item pelo id
+function removeItem(id) {
+    const items = getSavedWishlist().filter(item => item.id !== id);
+    saveWishlist(items);
+    renderWishlist();
+}
+
+// Quando se submete o formulário
 form.addEventListener('submit', (e) => {
     e.preventDefault();
 
-    const name = document.getElementById('item-name').value.trim();
-    const link = document.getElementById('item-link').value.trim();
+    const nameInput = document.getElementById('item-name');
+    const linkInput = document.getElementById('item-link');
+
+    const name = nameInput.value.trim();
+    const link = linkInput.value.trim();
 
     if (name === "") return;
 
-    const li = document.createElement('li');
-    li.innerHTML = link
-        ? `<strong>${name}</strong> - <a href="${link}" target="_blank">Ver produto</a>`
-        : `<strong>${name}</strong>`;
+    const items = getSavedWishlist();
 
-    wishlist.appendChild(li);
+    const newItem = {
+        id: Date.now(), // id simples
+        name,
+        link
+    };
 
-    form.reset();
+    items.push(newItem);
+    saveWishlist(items);
+    renderWishlist();
 
+    // limpar campos
+    nameInput.value = '';
+    linkInput.value = '';
 });
 
+// Carrega a wishlist ao abrir a página
+document.addEventListener('DOMContentLoaded', renderWishlist);
 
-// ❄️ Animação de neve
+
+// ==== NEVE 🎄 ==== //
+const snowContainer = document.getElementById('snow-container');
+
 function createSnowflake() {
-    const snowContainer = document.getElementById('snow-container');
     const snowflake = document.createElement('div');
     snowflake.classList.add('snowflake');
-    snowflake.textContent = '❄'; // Podes trocar por "✦" ou "•" para variar
+    snowflake.textContent = '❄';
 
-    // Posição e tamanho aleatórios
+    // posição horizontal aleatória
     snowflake.style.left = Math.random() * 100 + 'vw';
-    snowflake.style.fontSize = (Math.random() * 15 + 10) + 'px';
-    snowflake.style.animationDuration = (Math.random() * 5 + 5) + 's';
-    snowflake.style.opacity = Math.random();
+
+    // tamanho aleatório
+    const size = Math.random() * 1.2 + 0.5;
+    snowflake.style.fontSize = size + 'rem';
+
+    // duração da queda
+    const duration = Math.random() * 5 + 5; // entre 5 e 10s
+    snowflake.style.animationDuration = duration + 's';
 
     snowContainer.appendChild(snowflake);
 
-    // Remover floco após a queda
     setTimeout(() => {
         snowflake.remove();
-    }, 10000);
+    }, duration * 1000);
 }
 
 // Criar flocos a intervalos regulares
 setInterval(createSnowflake, 200);
-
-//Função para guardar wishlist
-
