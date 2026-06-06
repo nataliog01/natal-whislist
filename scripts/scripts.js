@@ -18,6 +18,11 @@ const gifts = [
         name: "Helio Strap",
         link: "https://www.amazon.es/-/pt/gp/product/B0F8HJCB47?smid=&psc=1",
         taken: false
+    },
+    {
+        name: "Relógio Radiant",
+        link: "https://rogeriojoalheiro.com/products/relogio-radiant-chris?_pos=19&_sid=d76b3811f&_ss=r",
+        taken: false
     }
 ];
 
